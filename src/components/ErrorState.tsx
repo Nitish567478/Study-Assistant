@@ -134,10 +134,6 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         </div>
       )}
 
-      <div className="error-tip-box">
-        💡 <strong>Mitigation Tip:</strong> {meta.recoveryTip}
-      </div>
-
       <div className="error-actions-row">
         <button type="button" className="btn-primary-retry" onClick={onRetry}>
           <RefreshCw size={16} />
