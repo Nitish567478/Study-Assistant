@@ -3,7 +3,7 @@ import {
   Layers,
   HelpCircle,
   Clock,
-  ArrowLeft,
+  Plus,
   Share2,
   Check,
   Download,
@@ -76,8 +76,13 @@ export const ResultView: React.FC<ResultViewProps> = ({
     <div className="result-container">
       <div className="deck-header-box">
         <div className="deck-nav-bar">
-          <button type="button" className="btn-back" onClick={onReset}>
-            <ArrowLeft size={15} />
+          <button
+            type="button"
+            className="btn-back"
+            onClick={onReset}
+            aria-label="Enter new notes to synthesize study deck"
+          >
+            <Plus size={15} aria-hidden="true" />
             <span>Enter New Notes</span>
           </button>
 

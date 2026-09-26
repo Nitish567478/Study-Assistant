@@ -4,6 +4,7 @@ import {
   ApiSuccessResponse,
 } from '../types/result';
 import { validateStudyDeck } from './validateResult';
+import { generateClientDeck } from './clientGenerate';
 
 export class AppApiError extends Error {
   errorType: ErrorType;
@@ -51,6 +52,19 @@ export async function callBackendGenerate(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
+      if (response.status === 404) {
+        console.warn('[Study Assistant] Backend endpoint /api/generate returned 404. Seamlessly engaging client-side Smart Engine fallback.');
+        const clientDeck = generateClientDeck(payload.prompt, payload.difficulty, payload.refinePrevious);
+        return {
+          success: true,
+          data: clientDeck,
+          raw: JSON.stringify(clientDeck, null, 2),
+          provider: 'Study Assistant Smart Engine (Client Fallback)',
+          model: 'smart-curriculum-v2',
+          latencyMs: Date.now() - startTime,
+        };
+      }
+
       let errorBody: any = null;
       let rawText = '';
       try {
@@ -127,6 +141,20 @@ export async function callBackendGenerate(
 
     if (isUserAbort) {
       throw new AppApiError('ABORTED', 'Request was cancelled by the user.');
+    }
+
+    // If host has no backend proxy or fetch network failed, engage client-side fallback
+    if (err?.name === 'TypeError' || String(err?.message || '').toLowerCase().includes('fetch')) {
+      console.warn('[Study Assistant] Fetch to backend failed. Seamlessly engaging client-side Smart Engine fallback.');
+      const clientDeck = generateClientDeck(payload.prompt, payload.difficulty, payload.refinePrevious);
+      return {
+        success: true,
+        data: clientDeck,
+        raw: JSON.stringify(clientDeck, null, 2),
+        provider: 'Study Assistant Smart Engine (Offline Fallback)',
+        model: 'smart-curriculum-v2',
+        latencyMs: Date.now() - startTime,
+      };
     }
 
     throw new AppApiError(

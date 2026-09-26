@@ -87,40 +87,42 @@ export const PromptInput: React.FC<PromptInputProps> = ({
 
       <form onSubmit={handleSubmit} className="clean-input-card">
         <div className="clean-card-header">
-          <span className="clean-section-tag">Target Difficulty:</span>
-          <div className="clean-difficulty-pills" role="radiogroup" aria-label="Select difficulty level">
-            <button
-              type="button"
-              className={`clean-diff-btn ${difficulty === 'Beginner' ? 'diff-active' : ''}`}
-              onClick={() => setDifficulty('Beginner')}
-              role="radio"
-              aria-checked={difficulty === 'Beginner'}
-            >
-              <span className="diff-emoji">🌱</span>
-              <span>Beginner</span>
-            </button>
+          <div className="clean-difficulty-group">
+            <span id="target-diff-label" className="clean-section-tag">Target Difficulty:</span>
+            <div className="clean-difficulty-pills" role="radiogroup" aria-labelledby="target-diff-label">
+              <button
+                type="button"
+                className={`clean-diff-btn ${difficulty === 'Beginner' ? 'diff-active' : ''}`}
+                onClick={() => setDifficulty('Beginner')}
+                role="radio"
+                aria-checked={difficulty === 'Beginner'}
+              >
+                <span className="diff-emoji">🌱</span>
+                <span>Beginner</span>
+              </button>
 
-            <button
-              type="button"
-              className={`clean-diff-btn ${difficulty === 'Intermediate' ? 'diff-active' : ''}`}
-              onClick={() => setDifficulty('Intermediate')}
-              role="radio"
-              aria-checked={difficulty === 'Intermediate'}
-            >
-              <span className="diff-emoji">⚡</span>
-              <span>Intermediate</span>
-            </button>
+              <button
+                type="button"
+                className={`clean-diff-btn ${difficulty === 'Intermediate' ? 'diff-active' : ''}`}
+                onClick={() => setDifficulty('Intermediate')}
+                role="radio"
+                aria-checked={difficulty === 'Intermediate'}
+              >
+                <span className="diff-emoji">⚡</span>
+                <span>Intermediate</span>
+              </button>
 
-            <button
-              type="button"
-              className={`clean-diff-btn ${difficulty === 'Advanced' ? 'diff-active' : ''}`}
-              onClick={() => setDifficulty('Advanced')}
-              role="radio"
-              aria-checked={difficulty === 'Advanced'}
-            >
-              <span className="diff-emoji">🔥</span>
-              <span>Advanced</span>
-            </button>
+              <button
+                type="button"
+                className={`clean-diff-btn ${difficulty === 'Advanced' ? 'diff-active' : ''}`}
+                onClick={() => setDifficulty('Advanced')}
+                role="radio"
+                aria-checked={difficulty === 'Advanced'}
+              >
+                <span className="diff-emoji">🔥</span>
+                <span>Advanced</span>
+              </button>
+            </div>
           </div>
 
           {input.length > 0 && (
@@ -129,8 +131,9 @@ export const PromptInput: React.FC<PromptInputProps> = ({
               className="clean-clear-btn"
               onClick={() => setInput('')}
               title="Clear text"
+              aria-label="Clear input text"
             >
-              <XCircle size={14} />
+              <XCircle size={14} aria-hidden="true" />
               <span>Clear</span>
             </button>
           )}
@@ -142,12 +145,17 @@ export const PromptInput: React.FC<PromptInputProps> = ({
             className="clean-textarea"
             placeholder="Paste your notes or enter a topic (e.g. 'React Hooks and State Architecture', 'Photosynthesis', 'Quantum Computing')..."
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              e.target.style.height = 'auto';
+              e.target.style.height = `${Math.min(e.target.scrollHeight, 450)}px`;
+            }}
             onKeyDown={handleKeyDown}
             rows={6}
             disabled={isLoading}
             autoFocus
             required
+            aria-label="Study notes or topic input"
           />
         </div>
 

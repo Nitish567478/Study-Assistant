@@ -7,6 +7,7 @@ import { ResultView } from './components/ResultView';
 import { SessionHistory, SavedSession } from './components/SessionHistory';
 import { STARTER_SESSIONS } from './data/starterSessions';
 import { callBackendGenerate, AppApiError } from './lib/api';
+import { generateClientDeck } from './lib/clientGenerate';
 import {
   ApiSuccessResponse,
   ErrorType,
@@ -218,7 +219,19 @@ export const App: React.FC = () => {
   };
 
   const handleUseFallbackDemo = () => {
-    handleGenerate(lastPrompt || 'React Hooks and State Architecture', undefined, difficulty, 'none');
+    const topic = lastPrompt.trim() || 'React Hooks and State Architecture';
+    const fallbackDeck = generateClientDeck(topic, difficulty);
+    setResultMeta({
+      success: true,
+      data: fallbackDeck,
+      raw: JSON.stringify(fallbackDeck, null, 2),
+      provider: 'Study Assistant Smart Engine (Offline Mode)',
+      model: 'smart-curriculum-v2',
+      latencyMs: 120,
+    });
+    setLastPrompt(fallbackDeck.topic);
+    setStatus('success');
+    saveSessionToStorage(fallbackDeck);
   };
 
   const handleResetToNew = () => {

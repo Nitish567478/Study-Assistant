@@ -225,17 +225,17 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards: initialCard
               <p className="card-question-text">{currentCard.question}</p>
 
               {currentCard.hint && (
-                <div
-                  className="card-hint-container"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowHint(!showHint);
-                  }}
-                >
-                  <div className="hint-header">
-                    <Lightbulb size={14} className="hint-icon" />
+                <div className="card-hint-wrapper" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    type="button"
+                    className="card-hint-btn"
+                    onClick={() => setShowHint(!showHint)}
+                    aria-expanded={showHint}
+                    aria-label={showHint ? 'Hide hint' : 'Show hint'}
+                  >
+                    <Lightbulb size={14} className="hint-icon" aria-hidden="true" />
                     <span>{showHint ? 'Hide Hint' : 'Show Hint'}</span>
-                  </div>
+                  </button>
                   {showHint && <p className="hint-text">{currentCard.hint}</p>}
                 </div>
               )}
